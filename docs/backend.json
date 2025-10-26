@@ -1,0 +1,265 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the ResumeAI application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.",
+          "format": "email"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the user account was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "createdAt"
+      ]
+    },
+    "Resume": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Resume",
+      "type": "object",
+      "description": "Represents a resume created or uploaded by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the resume entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Resume)"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the resume."
+        },
+        "content": {
+          "type": "string",
+          "description": "The full text of the resume."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the resume was created or uploaded.",
+          "format": "date-time"
+        },
+        "sourceType": {
+          "type": "string",
+          "description": "Indicates the resume creation method such as scratch, upload, or copy-paste.",
+          "format": "string"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "title",
+        "content",
+        "createdAt",
+        "sourceType"
+      ]
+    },
+    "AnalysisResult": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AnalysisResult",
+      "type": "object",
+      "description": "Represents the AI analysis results for a specific resume.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the analysis result entity."
+        },
+        "resumeId": {
+          "type": "string",
+          "description": "Reference to Resume. (Relationship: Resume 1:1 AnalysisResult)"
+        },
+        "analysisDate": {
+          "type": "string",
+          "description": "Timestamp indicating when the analysis was performed.",
+          "format": "date-time"
+        },
+        "spellingSuggestions": {
+          "type": "string",
+          "description": "AI suggestions to improve spelling."
+        },
+        "claritySuggestions": {
+          "type": "string",
+          "description": "AI suggestions to improve clarity."
+        },
+        "formattingSuggestions": {
+          "type": "string",
+          "description": "AI suggestions to improve formatting."
+        },
+        "skillGapSuggestions": {
+          "type": "string",
+          "description": "AI suggestions to identify skill gaps."
+        }
+      },
+      "required": [
+        "id",
+        "resumeId",
+        "analysisDate",
+        "spellingSuggestions",
+        "claritySuggestions",
+        "formattingSuggestions",
+        "skillGapSuggestions"
+      ]
+    },
+    "JobMatch": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "JobMatch",
+      "type": "object",
+      "description": "Represents the job matching results between a resume and a job description.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the job match entity."
+        },
+        "resumeId": {
+          "type": "string",
+          "description": "Reference to Resume. (Relationship: Resume 1:N JobMatch)"
+        },
+        "jobDescription": {
+          "type": "string",
+          "description": "The text content of the job description used for matching."
+        },
+        "matchScore": {
+          "type": "number",
+          "description": "A numerical score indicating the degree of match between the resume and the job description."
+        },
+        "strengths": {
+          "type": "string",
+          "description": "Description of the strengths found in the resume relevant to the job description."
+        },
+        "missingSkills": {
+          "type": "string",
+          "description": "Description of the skills missing from the resume based on the job description."
+        },
+        "improvementSuggestions": {
+          "type": "string",
+          "description": "AI suggestions to improve the resume for the specified job description."
+        },
+        "matchDate": {
+          "type": "string",
+          "description": "Timestamp indicating when the job matching was performed.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "resumeId",
+        "jobDescription",
+        "matchScore",
+        "strengths",
+        "missingSkills",
+        "improvementSuggestions",
+        "matchDate"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Collection to store user profiles.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/resumes/{resumeId}",
+        "definition": {
+          "entityName": "Resume",
+          "schema": {
+            "$ref": "#/backend/entities/Resume"
+          },
+          "description": "Collection to store resumes created or uploaded by a user. Ensures path-based ownership for security.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "resumeId",
+              "description": "The unique identifier for the resume."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/resumes/{resumeId}/analysisResults/{analysisResultId}",
+        "definition": {
+          "entityName": "AnalysisResult",
+          "schema": {
+            "$ref": "#/backend/entities/AnalysisResult"
+          },
+          "description": "Collection to store analysis results for a specific resume. Ensures path-based ownership for security.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "resumeId",
+              "description": "The unique identifier for the resume."
+            },
+            {
+              "name": "analysisResultId",
+              "description": "The unique identifier for the analysis result."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/resumes/{resumeId}/jobMatches/{jobMatchId}",
+        "definition": {
+          "entityName": "JobMatch",
+          "schema": {
+            "$ref": "#/backend/entities/JobMatch"
+          },
+          "description": "Collection to store job matching results for a specific resume. Ensures path-based ownership for security.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "resumeId",
+              "description": "The unique identifier for the resume."
+            },
+            {
+              "name": "jobMatchId",
+              "description": "The unique identifier for the job match."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to ensure data isolation and ownership based on user IDs, enabling secure and efficient data retrieval and management for the ResumeAI application. It leverages path-based ownership to enforce data privacy and facilitate straightforward security rules. The root `/users/{userId}` collection is the entry point for each user's data. Under each user, resumes, analysis results and job matches are stored as subcollections. This structure provides clear ownership, avoids complex `get()` calls in security rules, and naturally supports the app's requirements.\n\n1.  **Authorization Independence:** Path-based ownership `/users/{userId}/resumes/{resumeId}` inherently provides authorization independence. Access control is based solely on the `userId` derived from `request.auth.uid`, without needing to fetch parent document data.\n2.  **Structural Segregation:**  All resumes under `/users/{userId}/resumes` belong to that user, ensuring homogeneous security posture.\n3.  **Access Modeling:** Uses hierarchical path-based ownership for `User 1:N Resume` relationship. Analysis results and job matches follow the same ownership pattern, nested under resumes.\n4. **QAPs Support:** This design enables secure list operations. Rules can easily enforce that a user can only list resumes, analysis results, and job matches under their own `/users/{userId}` path.\n5.  **Invariants:** The structure supports the integrity of ownership. Each resume, analysis result, and job match is associated with a specific user ID in its path, making it easy to enforce the invariant that only the owner can modify their data."
+  }
+}
