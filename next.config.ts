@@ -1,7 +1,6 @@
-import type {NextConfig} from 'next';
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -63,9 +62,10 @@ const nextConfig: NextConfig = {
         hostname: 'cdn.vectorstock.com',
         port: '',
         pathname: '/**',
-      }
+      },
     ],
   },
+  devIndicators: false, 
 };
 
 export default nextConfig;
