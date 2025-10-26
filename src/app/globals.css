@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 5%;
+    --foreground: 210 40% 98%;
+
+    --card: 220 20% 10%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 220 20% 5%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 220 20% 15%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 220 20% 15%;
+    --muted-foreground: 220 15% 60%;
+
+    --accent: 217 91% 65%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 20% 15%;
+    --input: 220 20% 15%;
+    --ring: 217 91% 65%;
+
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .holographic-sheen::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(110deg, transparent 30%, hsla(217, 91%, 60%, 0.1) 50%, transparent 70%);
+    background-size: 300% 100%;
+    animation: sheen 5s linear infinite;
+    pointer-events: none;
+    border-radius: inherit;
+  }
+  @keyframes sheen {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+}
